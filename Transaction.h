@@ -1,10 +1,3 @@
-/*
- * Transaction.h
- *
- *  Created on: 12-May-2015
- *      Author: akash
- */
-
 #ifndef TRANSACTION_H_
 #define TRANSACTION_H_
 #include<string>

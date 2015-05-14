@@ -63,7 +63,9 @@ void Customer::withdraw() {
 		cout << "Withdraw failed. Amount can not be greater than $500" << endl;
 		return;
 	} else if (balance - money < 50) {
-		cout << "Withdraw Failed. Balance below $50 not allowed." << endl;
+		cout
+				<< "Withdraw Failed. Balance below $50 not allowed. Please close account to withdraw rest of money"
+				<< endl;
 	} else {
 		if (balance < 1000) {
 			string response;
@@ -111,7 +113,8 @@ void Customer::closeAccount() {
 		balance = 0;
 	} else {
 		balance -= 500;
-		cout << "Please collect $500. See the cashier to complete the task"
+		cout
+				<< "Please collect $500. Can not withdraw more than $500. See the cashier to complete the task"
 				<< endl;
 	}
 }
