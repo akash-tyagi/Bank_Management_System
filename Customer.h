@@ -9,17 +9,18 @@ using namespace std;
 namespace std {
 
 class Customer {
-public:
 	string first;
 	string last;
-	int accountNum;
+	unsigned int accountNum;
 	int pin;
 	float balance;
 	vector<Transaction> transactions;
 	string getTime();
+public:
 	Customer();
-	Customer(string, string, int, int);
-	bool checkAccountNum(int);
+	Customer(string, string, unsigned, int);
+
+	bool checkAccountNum(unsigned);
 	bool checkPin();
 	void depositMoney();
 	void checkBalance();
@@ -28,11 +29,20 @@ public:
 	void closeAccount();
 	virtual ~Customer();
 
-	float getBalance() const {
-		return balance;
-	}
+	float getBalance() const;
+	unsigned int getAccountNum() const;
+	void setAccountNum(unsigned int);
+	void setBalance(float);
+	const string& getFirst() const;
+	void setFirst(const string&);
+	const string& getLast() const;
+	void setLast(const string&);
+	int getPin() const;
+	void setPin(int);
+	vector<Transaction>& getTransactions();
+	void setTransactions(const vector<Transaction>& transactions);
 };
-
-} /* namespace std */
+}
+/* namespace std */
 
 #endif /* CUSTOMER_H_ */

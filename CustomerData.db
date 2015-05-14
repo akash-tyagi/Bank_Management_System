@@ -1,6 +1,14 @@
-[ customer John Smith
+[
+	customer John Smith
 	account 231456
 	PIN 3245
 	balance 1234.56
 	transactions { (2011-10-12 25) (2011-10-13 -35) }
+]
+[
+	customer Akash Smith
+	account 231452
+	PIN 1122
+	balance 134.56
+	transactions { (2011-10-12 5) (2011-10-13 -5) }
 ]

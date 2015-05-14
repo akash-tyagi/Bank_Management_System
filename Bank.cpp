@@ -13,6 +13,19 @@ Bank::Bank() {
 
 }
 
+unsigned Bank::getNextFreeAccountNumber() {
+	vector<Customer>::iterator custIter = customers.begin();
+	while (custIter != customers.end()) {
+		if ((*custIter).checkAccountNum(freeAccountNum) == true) {
+			freeAccountNum++;
+			custIter = customers.begin();
+			continue;
+		}
+		custIter++;
+	}
+	return freeAccountNum;
+}
+
 vector<Customer>::iterator Bank::findCustomer() {
 	int accountNum;
 	cout << "Enter your account number:";
@@ -32,8 +45,7 @@ void Bank::openAccount() {
 	cin >> first;
 	cin >> last;
 
-	int accountNumber = freeAccountNum;
-	freeAccountNum++;
+	unsigned int accountNumber = getNextFreeAccountNumber();
 
 	srand(time(NULL));
 	int pin = rand() % 10000;
@@ -47,19 +59,11 @@ void Bank::openAccount() {
 }
 
 void Bank::startOperating() {
-
 	int option = 0;
-//	cout << "\nThis is your Piggy Bank. Welcome valued customer.";
-	string fileName = "src/CustomerData.db";
-	ifstream ifs(fileName.c_str());
-	vector<Customer> customers;
-	while (true) {
-		Customer cust;
-		if (!(ifs >> cust))
-			break;
-		customers.push_back(cust);
-	}
-
+	cout << "\nThis is your Piggy Bank. Welcome valued customer.";
+	readCustomersFromFile();
+	cout << "Starting2";
+	writeCustomerDataToFile();
 	while (false) {
 		cout << "\n\nPlease select one of these operations (enter a number):"
 				<< endl;
@@ -130,11 +134,27 @@ Bank::~Bank() {
 // TODO Auto-generated destructor stub
 }
 
+int fData = 0;
+void Bank::readCustomersFromFile() {
+	string fileName = "CustomerData.db";
+	ifstream ifs(fileName.c_str());
+	fData = 0;
+	while (true) {
+		Customer cust;
+		ifs >> cust;
+		if (cust.getAccountNum() == 0)
+			break;
+		customers.push_back(cust);
+	}
+	cout << customers.size() << endl;
+	cout << "Reading done" << endl;
+}
+
 istream& operator >>(istream& is, Transaction& t) {
 	char ch1;
 	if (is >> ch1 && ch1 != '(') {
 		is.unget();
-		is.clear(ios_base::failbit);
+		fData = 1;
 		return is;
 	}
 
@@ -142,8 +162,9 @@ istream& operator >>(istream& is, Transaction& t) {
 	string date;
 	float money;
 	is >> date >> money >> ch2;
+	cout << date << money << endl;
 	if (!is || ch2 != ')')
-		cout << "OOPSSSSSSSSS!!!!!!";
+		cout << "FILE READ ERROR!";
 	t.amount = money;
 	t.date = date;
 	return is;
@@ -151,31 +172,64 @@ istream& operator >>(istream& is, Transaction& t) {
 
 istream& operator >>(istream& is, Customer& cust) {
 	char ch1;
-	if (is >> ch1 && ch1 != '[') {
-		is.unget();
-		is.clear(ios_base::failbit);
+	is >> ch1;
+	if (ch1 != '[' || !is) {
+		fData = 0;
 		return is;
-	}
-	cout << ch1;
-	while (is >> ch1) {
-		cout << ch1;
 	}
 
 	string temp;
-	is >> temp >> cust.first >> cust.last >> temp >> cust.accountNum >> temp
-			>> cust.pin >> temp >> cust.balance >> temp >> ch1;
-	cout << 23 << cust.first << cust.last << temp << endl;
+	string first, last;
+	unsigned accountNum;
+	int pin;
+	float balance;
+	is >> temp >> first >> last >> temp >> accountNum >> temp >> pin >> temp
+			>> balance >> temp >> ch1;
+	cust.setAccountNum(accountNum);
+	cust.setFirst(first);
+	cust.setLast(last);
+	cust.setPin(pin);
+	cust.setBalance(balance);
+
+	cout << first << last << accountNum << pin << balance << endl;
 
 	vector<Transaction> transactions;
 	Transaction t;
-	while (is >> t) {
+	fData = 2;
+	while (is >> t && fData == 2) {
 		Transaction temp;
 		temp.amount = t.amount;
 		temp.date = t.date;
 		transactions.push_back(temp);
 	}
-
-	cust.transactions = transactions;
+	cust.setTransactions(transactions);
+	cout << "\nTotal Transactions read:" + transactions.size();
+	is >> ch1 >> ch1;
 	return is;
+}
+
+void Bank::writeCustomerDataToFile() {
+	string fileName = "CustomerData2.db";
+	ofstream ost(fileName.c_str());
+	vector<Customer>::iterator custIter = customers.begin();
+	while (custIter != customers.end()) {
+		ost << "[\n\tcustomer " << (*custIter).getFirst() << " "
+				<< (*custIter).getLast() << "\n";
+		ost << "\taccount " << (*custIter).getAccountNum() << "\n";
+		ost << "\tPIN " << (*custIter).getPin() << "\n";
+		ost << "\tbalance " << (*custIter).getBalance() << "\n";
+		ost << "\ttransactions {";
+
+		vector<Transaction>::iterator iter =
+				(*custIter).getTransactions().begin();
+		while (iter != (*custIter).getTransactions().end()) {
+			ost << "(" << (*iter).date << " " << (*iter).amount << ") ";
+			iter++;
+		}
+		ost << "}\n]\n";
+		cout << "WRITING DONE1";
+		custIter++;
+	}
+	ost.close();
 }
 

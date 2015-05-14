@@ -12,17 +12,20 @@
 using namespace std;
 
 class Bank {
-public:
-	int freeAccountNum;
+	unsigned int freeAccountNum;
 	int totalCustomers;
 	float totalAmtDeposits;
 	float avgCurrBalance;
 	vector<Customer> customers;
 	Statistics stats;
+public:
 	Bank();
 	void startOperating();
 	void openAccount();
 	vector<Customer>::iterator findCustomer();
+	void readCustomersFromFile();
+	void writeCustomerDataToFile();
+	unsigned getNextFreeAccountNumber();
 	virtual ~Bank();
 };
 
