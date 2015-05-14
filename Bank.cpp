@@ -49,8 +49,18 @@ void Bank::openAccount() {
 void Bank::startOperating() {
 
 	int option = 0;
-	cout << "\nThis is your Piggy Bank. Welcome valued customer.";
+//	cout << "\nThis is your Piggy Bank. Welcome valued customer.";
+	string fileName = "src/CustomerData.db";
+	ifstream ifs(fileName.c_str());
+	vector<Customer> customers;
 	while (true) {
+		Customer cust;
+		if (!(ifs >> cust))
+			break;
+		customers.push_back(cust);
+	}
+
+	while (false) {
 		cout << "\n\nPlease select one of these operations (enter a number):"
 				<< endl;
 		cout << "1. Open a new account" << endl;
@@ -118,5 +128,54 @@ void Bank::startOperating() {
 
 Bank::~Bank() {
 // TODO Auto-generated destructor stub
+}
+
+istream& operator >>(istream& is, Transaction& t) {
+	char ch1;
+	if (is >> ch1 && ch1 != '(') {
+		is.unget();
+		is.clear(ios_base::failbit);
+		return is;
+	}
+
+	char ch2;
+	string date;
+	float money;
+	is >> date >> money >> ch2;
+	if (!is || ch2 != ')')
+		cout << "OOPSSSSSSSSS!!!!!!";
+	t.amount = money;
+	t.date = date;
+	return is;
+}
+
+istream& operator >>(istream& is, Customer& cust) {
+	char ch1;
+	if (is >> ch1 && ch1 != '[') {
+		is.unget();
+		is.clear(ios_base::failbit);
+		return is;
+	}
+	cout << ch1;
+	while (is >> ch1) {
+		cout << ch1;
+	}
+
+	string temp;
+	is >> temp >> cust.first >> cust.last >> temp >> cust.accountNum >> temp
+			>> cust.pin >> temp >> cust.balance >> temp >> ch1;
+	cout << 23 << cust.first << cust.last << temp << endl;
+
+	vector<Transaction> transactions;
+	Transaction t;
+	while (is >> t) {
+		Transaction temp;
+		temp.amount = t.amount;
+		temp.date = t.date;
+		transactions.push_back(temp);
+	}
+
+	cust.transactions = transactions;
+	return is;
 }
 

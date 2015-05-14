@@ -8,7 +8,12 @@
 #include "Customer.h"
 
 namespace std {
-
+Customer::Customer() {
+	first = last = "";
+	accountNum = 0;
+	balance = -1;
+	pin = -1;
+}
 Customer::Customer(string first, string last, int accountNum, int pin) {
 	this->first = first;
 	this->last = last;
@@ -37,9 +42,9 @@ void Customer::history() {
 		transactions.erase(transactions.begin());
 	}
 
-	vector<string>::iterator iter = transactions.begin();
+	vector<Transaction>::iterator iter = transactions.begin();
 	while (iter != transactions.end()) {
-		cout << "<" << *iter << "> ";
+		(*iter).print_transaction();
 	}
 }
 
@@ -52,6 +57,7 @@ bool Customer::checkAccountNum(int accountNum) {
 		return true;
 	return false;
 }
+
 void Customer::withdraw() {
 	float money;
 	cout << "Enter the amount to withdraw:";
@@ -60,7 +66,9 @@ void Customer::withdraw() {
 		return;
 	if (money <= balance) {
 		balance -= money;
-		string transaction = getTime() ;
+		Transaction transaction;
+		transaction.amount = money;
+		transaction.date = getTime();
 		transactions.push_back(transaction);
 	}
 
@@ -86,7 +94,9 @@ void Customer::depositMoney() {
 	cout << "Enter the amount to deposit:";
 	cin >> money;
 	balance += money;
-	string transaction = getTime();
+	Transaction transaction;
+	transaction.amount = money;
+	transaction.date = getTime();
 	transactions.push_back(transaction);
 }
 

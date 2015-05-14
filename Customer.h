@@ -4,19 +4,20 @@
 #include<vector>
 #include<iostream>
 #include<ctime>
-
+#include"Transaction.h"
 using namespace std;
 namespace std {
 
 class Customer {
+public:
 	string first;
 	string last;
 	int accountNum;
 	int pin;
 	float balance;
-	vector<string> transactions;
+	vector<Transaction> transactions;
 	string getTime();
-public:
+	Customer();
 	Customer(string, string, int, int);
 	bool checkAccountNum(int);
 	bool checkPin();
