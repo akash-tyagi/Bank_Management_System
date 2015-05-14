@@ -27,7 +27,6 @@ public:
 	void withdraw();
 	void history();
 	void closeAccount();
-	virtual ~Customer();
 
 	float getBalance() const;
 	unsigned int getAccountNum() const;

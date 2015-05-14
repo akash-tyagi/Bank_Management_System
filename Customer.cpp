@@ -1,10 +1,3 @@
-/*
- * Customer.cpp
- *
- *  Created on: 12-May-2015
- *      Author: akash
- */
-
 #include "Customer.h"
 
 namespace std {
@@ -22,6 +15,7 @@ Customer::Customer(string first, string last, unsigned accountNum, int pin) {
 	balance = 1000;
 }
 
+/*Get the current date in format: mm-hh-yyyy */
 string Customer::getTime() {
 	time_t rawtime;
 	struct tm * timeinfo;
@@ -33,7 +27,6 @@ string Customer::getTime() {
 	strftime(buffer, 80, "%m-%d-%Y", timeinfo);
 	std::string str(buffer);
 
-	std::cout << str;
 	return string(buffer);
 }
 
@@ -41,10 +34,11 @@ void Customer::history() {
 	while (transactions.size() > 10) {
 		transactions.erase(transactions.begin());
 	}
-
+	cout << "Last 10 Transactions:";
 	vector<Transaction>::iterator iter = transactions.begin();
 	while (iter != transactions.end()) {
 		(*iter).print_transaction();
+		iter++;
 	}
 }
 
@@ -120,9 +114,6 @@ void Customer::closeAccount() {
 		cout << "Please collect $500. See the cashier to complete the task"
 				<< endl;
 	}
-}
-
-Customer::~Customer() {
 }
 
 float Customer::getBalance() const {

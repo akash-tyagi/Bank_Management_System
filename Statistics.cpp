@@ -1,10 +1,3 @@
-/*
- * Statistics.cpp
- *
- *  Created on: 12-May-2015
- *      Author: akash
- */
-
 #include "Statistics.h"
 
 namespace std {
@@ -33,6 +26,7 @@ void Statistics::fillData(vector<Customer> customers) {
 
 void Statistics::getStats() {
 	int option;
+	cout << "Please enter one of these options:" << endl;
 	cout << "1. Total number of customers" << endl;
 	cout << "2. Total amount of deposits" << endl;
 	cout << "3. Average current balance" << endl;
@@ -45,14 +39,11 @@ void Statistics::getStats() {
 		cout << "Total Deposit Amount:" << totalDeposits;
 		break;
 	case 3:
-		cout << "Avg Curr balance:" << avgCurrBalance;
+		cout << "Average Current balance:" << avgCurrBalance;
+		break;
+	default:
+		cout << "Wrong Input" << endl;
 		break;
 	}
-
 }
-
-Statistics::~Statistics() {
-	// TODO Auto-generated destructor stub
-}
-
 } /* namespace std */

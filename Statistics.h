@@ -13,7 +13,6 @@ public:
 	Statistics();
 	void getStats();
 	void fillData(vector<Customer>);
-	virtual ~Statistics();
 };
 
 } /* namespace std */

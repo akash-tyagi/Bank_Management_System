@@ -1,16 +1,7 @@
-/*
- * Bank.cpp
- *
- *  Created on: 12-May-2015
- *      Author: akash
- */
-
 #include "Bank.h"
 
 Bank::Bank() {
 	freeAccountNum = 1;
-	// TODO Auto-generated constructor stub
-
 }
 
 unsigned Bank::getNextFreeAccountNumber() {
@@ -41,7 +32,7 @@ vector<Customer>::iterator Bank::findCustomer() {
 
 void Bank::openAccount() {
 	string first, last;
-	cout << "Enter your first and last name: " << endl;
+	cout << "Please enter your first and last name:";
 	cin >> first;
 	cin >> last;
 
@@ -53,6 +44,7 @@ void Bank::openAccount() {
 	Customer customer(first, last, accountNumber, pin);
 	customers.push_back(customer);
 
+	cout << "Account creation successful." << endl;
 	cout << "Account Num:" << accountNumber << endl;
 	cout << "Pin:" << setw(4) << setfill('0') << pin << endl;
 
@@ -62,10 +54,11 @@ void Bank::startOperating() {
 	int option = 0;
 	cout << "\nThis is your Piggy Bank. Welcome valued customer.";
 	readCustomersFromFile();
-	cout << "Starting2";
 	writeCustomerDataToFile();
-	while (false) {
-		cout << "\n\nPlease select one of these operations (enter a number):"
+	while (true) {
+		cout
+				<< "\n\n--------------------------------------------------------------\n";
+		cout << "Please select one of these operations (enter a number):"
 				<< endl;
 		cout << "1. Open a new account" << endl;
 		cout << "2. Close the existing account" << endl;
@@ -79,10 +72,12 @@ void Bank::startOperating() {
 		switch (option) {
 		case 1:
 			openAccount();
+			writeCustomerDataToFile();
 			break;
 		case 2: {
 			string response;
-			cout << "Are you sure you want to close your account?";
+			cout
+					<< "Are you sure you want to close your account? Please enter 'yes' or otherwise.";
 			cin >> response;
 			if (response != "yes")
 				break;
@@ -92,6 +87,7 @@ void Bank::startOperating() {
 				continue;
 			(*cust).closeAccount();
 			customers.erase(cust);
+			writeCustomerDataToFile();
 			break;
 		}
 		case 3: {
@@ -99,6 +95,7 @@ void Bank::startOperating() {
 			if (cust == customers.end() || (*cust).checkPin() == false)
 				continue;
 			(*cust).withdraw();
+			writeCustomerDataToFile();
 			break;
 		}
 		case 4: {
@@ -106,6 +103,7 @@ void Bank::startOperating() {
 			if (cust == customers.end())
 				continue;
 			(*cust).depositMoney();
+			writeCustomerDataToFile();
 			break;
 		}
 		case 5: {
@@ -126,12 +124,12 @@ void Bank::startOperating() {
 			stats.fillData(customers);
 			stats.getStats();
 			break;
+		default:
+			cout << "Wrong Input" << endl;
+			break;
 		}
-	}
-}
 
-Bank::~Bank() {
-// TODO Auto-generated destructor stub
+	}
 }
 
 int fData = 0;
@@ -146,8 +144,6 @@ void Bank::readCustomersFromFile() {
 			break;
 		customers.push_back(cust);
 	}
-	cout << customers.size() << endl;
-	cout << "Reading done" << endl;
 }
 
 istream& operator >>(istream& is, Transaction& t) {
@@ -157,14 +153,9 @@ istream& operator >>(istream& is, Transaction& t) {
 		fData = 1;
 		return is;
 	}
-
-	char ch2;
 	string date;
 	float money;
-	is >> date >> money >> ch2;
-	cout << date << money << endl;
-	if (!is || ch2 != ')')
-		cout << "FILE READ ERROR!";
+	is >> date >> money >> ch1;
 	t.amount = money;
 	t.date = date;
 	return is;
@@ -191,8 +182,6 @@ istream& operator >>(istream& is, Customer& cust) {
 	cust.setPin(pin);
 	cust.setBalance(balance);
 
-	cout << first << last << accountNum << pin << balance << endl;
-
 	vector<Transaction> transactions;
 	Transaction t;
 	fData = 2;
@@ -203,13 +192,12 @@ istream& operator >>(istream& is, Customer& cust) {
 		transactions.push_back(temp);
 	}
 	cust.setTransactions(transactions);
-	cout << "\nTotal Transactions read:" + transactions.size();
 	is >> ch1 >> ch1;
 	return is;
 }
 
 void Bank::writeCustomerDataToFile() {
-	string fileName = "CustomerData2.db";
+	string fileName = "CustomerData.db";
 	ofstream ost(fileName.c_str());
 	vector<Customer>::iterator custIter = customers.begin();
 	while (custIter != customers.end()) {
@@ -227,7 +215,6 @@ void Bank::writeCustomerDataToFile() {
 			iter++;
 		}
 		ost << "}\n]\n";
-		cout << "WRITING DONE1";
 		custIter++;
 	}
 	ost.close();

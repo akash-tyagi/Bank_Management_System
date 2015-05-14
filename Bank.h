@@ -26,7 +26,6 @@ public:
 	void readCustomersFromFile();
 	void writeCustomerDataToFile();
 	unsigned getNextFreeAccountNumber();
-	virtual ~Bank();
 };
 
 istream& operator >>(istream &, Transaction &);
